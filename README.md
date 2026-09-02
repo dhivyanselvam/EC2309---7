@@ -1,6 +1,5 @@
 # EXPERIMENT--07-SQUARE-WAVE-GENERATION-AT-THE-OUTPUT-PIN-USING-TIMER
-### Name : SAIPRASATH P
-### Reg No : 212224230238
+
 ### Aim:
 To generate a PWM wave at the timer pin output and  simuate it on  proteus using an virtual oscilloscope  
 
@@ -97,43 +96,133 @@ Step14. click on debug and simulate using simulation as shown below
   
 
 ## STM 32 CUBE PROGRAM :
-~~~
+```
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim2;
 
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
+/* USER CODE BEGIN PFP */
 
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
 int main(void)
 {
 
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
   SystemClock_Config();
 
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_TIM2_Init();
+  /* USER CODE BEGIN 2 */
 
+  /* USER CODE END 2 */
   HAL_TIM_Base_Start(&htim2);
   HAL_TIM_PWM_Init(&htim2);
-  HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+    /* USER CODE END WHILE */
 
+    /* USER CODE BEGIN 3 */
   }
-
+  /* USER CODE END 3 */
 }
 
-
+/**
+  * @brief System Clock Configuration
+  * @retval None
+  */
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  /** Configure the main internal regulator output voltage
+  */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
+  */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
@@ -142,6 +231,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
+  /** Initializes the CPU, AHB and APB buses clocks
+  */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
@@ -167,7 +259,6 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 0 */
 
-  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
@@ -177,18 +268,9 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 10000;
+  htim2.Init.Period = 1000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
-  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -200,7 +282,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse =9000;
+  sConfigOC.Pulse = 250;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -221,10 +303,16 @@ static void MX_TIM2_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -245,8 +333,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
@@ -263,114 +350,81 @@ void assert_failed(uint8_t *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
+```
 
-~~~
 
 
 
 
 ## Output screen shots of proteus  :
- <img width="1236" height="883" alt="Screenshot 2026-03-10 092203" src="https://github.com/user-attachments/assets/7b432e17-e10d-4078-a391-21e125a2c007" />
-<img width="1382" height="875" alt="Screenshot 2026-03-10 092050" src="https://github.com/user-attachments/assets/4fa58a65-53a1-4dbc-a939-fde28eaacdb2" />
-<img width="1386" height="876" alt="7000" src="https://github.com/user-attachments/assets/27f0c8ff-a5dc-4092-8988-e79ab8fe31c9" />
-<img width="1376" height="878" alt="9000" src="https://github.com/user-attachments/assets/c6691eba-e90f-4afb-a5a1-3956a8cc99e6" />
+<img width="873" height="717" alt="image" src="https://github.com/user-attachments/assets/ff334fe9-6ced-4b89-8bac-6574f2cb6e24" />
 
  
+ 
  ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
- <img width="947" height="717" alt="image" src="https://github.com/user-attachments/assets/c52bd4f7-6ea1-4daa-8bce-df41319c5b6b" />
+ <img width="1000" height="877" alt="image" src="https://github.com/user-attachments/assets/a1e241b4-5b3d-47c1-8433-98ffa811e3c3" />
 
+ 
 
 ## DUTY CYCLE AND FREQUENCY CALCULATION 
-### FOR PULSE AT 5000
+FOR PULSE AT 500
+<img width="1373" height="873" alt="image" src="https://github.com/user-attachments/assets/3cba7994-1deb-4fd2-9fa5-d9810d9c2fca" />
+```
+TON = 5 × 20 µs
+TON = 100 µs
+
+TOFF = 5 × 20 µs
+TOFF = 100 µs
+
+TOTAL TIME = TON + TOFF
+TOTAL TIME = 100 + 100 = 200 µs
+
+FREQUENCY = 1 / 200 µs = 5000 Hz
+
+DUTY RATIO = TON / (TON + TOFF)
+= 100 / 200
+= 0.5 (50%)
+```
+FOR PULSE AT 700
+<img width="1433" height="883" alt="image" src="https://github.com/user-attachments/assets/785eb26d-8bdc-4416-ac0e-71dc57a307e8" />
+```
+TON = 7 × 20 µs
+TON = 140 µs
+
+TOFF = 3 × 20 µs
+TOFF = 60 µs
+
+TOTAL TIME = 140 + 60 = 200 µs
+
+FREQUENCY = 1 / 200 µs = 5000 Hz
+
+DUTY RATIO = 140 / 200 = 0.7 (70%)
+```
 
 
-TON = 1.55 × 0.2
-= 0.31 ms
-
-TOFF = 1.55 × 0.2
-= 0.31 ms
-
-Total Time = TON + TOFF
-= 0.31 + 0.31
-= 0.62 ms
-= 0.62 × 10⁻³ sec
-
-Frequency = 1 / Total Time
-
-= 1 / (0.62 × 10⁻³)
-
-= 1.6129 × 10³ Hz
-
-= 1.6 kHz
-
-Duty Ratio = TON / (TON + TOFF)
-
-= 0.31 / 0.62
-
-= 0.5
 
 
-### FOR PULSE AT 7000
+FOR PULSE AT 900
+<img width="1377" height="882" alt="image" src="https://github.com/user-attachments/assets/7d42cf26-2e50-4ce9-a437-9d81923cbadb" />
+```
+TON = 9 × 20 µs
+TON = 180 µs
 
-TON = 2.2 × 0.2
-= 0.44 ms
+TOFF = 1 × 20 µs
+TOFF = 20 µs
 
-TOFF = 0.9 × 0.2
-= 0.18 ms
+TOTAL TIME = 180 + 20 = 200 µs
 
-Total Time = TON + TOFF
+FREQUENCY = 1 / 200 µs = 5000 Hz
 
-= 0.44 + 0.18
+DUTY RATIO = 180 / 200 = 0.9 (90%)
+```
 
-= 0.62 ms
 
-= 0.62 × 10⁻³ sec
 
-Frequency = 1 / Total Time
 
-= 1 / (0.62 × 10⁻³)
-
-= 1.6129 × 10³ Hz
-
-= 1.6 kHz
-
-Duty Ratio = TON / (TON + TOFF)
-
-= 0.44 / 0.62
-
-= 0.71
-
-### FOR PULSE AT 9000
-
-TON = 2.8 × 0.2
-= 0.56 ms
-
-TOFF = 0.3 × 0.2
-= 0.06 ms
-
-Total Time = TON + TOFF
-
-= 0.56 + 0.06
-
-= 0.62 ms
-
-= 0.62 × 10⁻³ sec
-
-Frequency = 1 / Total Time
-
-= 1 / (0.62 × 10⁻³)
-
-= 1.6129 × 10³ Hz
-
-= 1.6 kHz
-
-Duty Ratio = TON / (TON + TOFF)
-
-= 0.56 / 0.62
-
-= 0.90
 ## Result :
-A PWM Signal is generated using the following frequency and various duty cycles are simulated .
+A PWM Signal is generated using the following frequency and various duty cycles are simulated 
 
 
 
